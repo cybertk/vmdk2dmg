@@ -2,6 +2,8 @@
 
 > Convert vmdk to dmg
 
+[![CI Status](http://img.shields.io/travis/cybertk/homebrew-vmdk2dmg/master.svg?style=flat)](https://travis-ci.org/cybertk/homebrew-vmdk2dmg)
+
 ## Getting started
 
 Install from Homebrew

@@ -6,6 +6,6 @@ test-homebrew-formula:
 	chmod 640 $(shell brew --repository)/Library/Formula/$(FORMULA).rb
 
 	# Run tests
-	brew reinstall $(FORMULA)
+	brew reinstall --HEAD $(FORMULA)
 	brew test $(FORMULA)
 	brew audit --strict --online $(FORMULA)
