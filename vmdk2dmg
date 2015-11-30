@@ -14,11 +14,16 @@ trap cleanup EXIT
 vmdk_path=$1
 dmg_path=${2:-image.dmg}
 
-if [ -z "$vmdk_path" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];
+if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];
 then
     echo "Usage: vmdk2dmg /path/to/vmdk [/path/to/dmg]"
-    [ -z "$vmdk_path" ] && exit 1
     exit 0
+fi
+
+if [ ! -f "$vmdk_path" ];
+then
+    echo "error: $vmdk_path is invalid"
+    exit 1
 fi
 
 device=$(vdmutil attach "$vmdk_path" | head -n 1)
