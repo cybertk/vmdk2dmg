@@ -8,7 +8,7 @@ test-homebrew-formula:
 	# Run tests
 	brew reinstall --HEAD $(FORMULA)
 	brew test $(FORMULA)
-	brew audit --strict --online $(FORMULA)
+	brew audit --strict --online $(FORMULA).rb
 
 test-lint:
 	shellcheck vmdk2dmg
