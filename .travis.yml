@@ -1,6 +1,7 @@
 language: objective-c
 before_script:
 - brew update
+- brew install Caskroom/cask/paragon-vmdk-mounter
 - umask 027 # see https://github.com/Homebrew/homebrew/issues/46419
 script:
 - make
