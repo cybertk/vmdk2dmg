@@ -6,10 +6,12 @@ set -e
 
 cleanup ()
 {
+    rv=$?
     [ -n "$device" ] && hdiutil detach "$device"
+    exit $rv
 }
 
-trap cleanup EXIT
+trap cleanup INT TERM EXIT
 
 vmdk_path=$1
 dmg_path=${2:-image.dmg}
