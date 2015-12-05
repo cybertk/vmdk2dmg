@@ -20,3 +20,6 @@ test-homebrew-formula:
 	brew audit --strict --online $(FORMULA).rb
 	brew cask install paragon-vmdk-mounter virtualbox
 
+bootstrap:
+	brew install brew-cask bats shellcheck
+	brew cask install paragon-vmdk-mounter virtualbox
