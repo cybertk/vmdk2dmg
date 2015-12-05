@@ -1,8 +1,8 @@
 #!/usr/bin/env bats
 
 fixtures() {
-  FIXTURE_ROOT="/tmp/vmdk2dmg-tests"
-  RELATIVE_FIXTURE_ROOT="$(bats_trim_filename "$FIXTURE_ROOT")"
+    FIXTURE_ROOT="/tmp/vmdk2dmg-tests"
+    PATH="$BATS_TEST_DIRNAME/..:$PATH"
 }
 
 setup() {
@@ -21,12 +21,12 @@ fixtures
 
 # Global setup. See https://github.com/sstephenson/bats/issues/108
 @test "ensure fixtures" {
-  mkdir "$FIXTURE_ROOT" || true
-  rm "$FIXTURE_ROOT/valid.vmdk" || true
+    mkdir "$FIXTURE_ROOT" || true
+    rm "$FIXTURE_ROOT/valid.vmdk" || true
 
-  hdiutil create -ov -size 512k -type UDIF -fs UDF "$FIXTURE_ROOT/empty.dmg"
-  VBoxManage convertfromraw "$FIXTURE_ROOT/empty.dmg" "$FIXTURE_ROOT/valid.vmdk" --format vmdk
-  [ -f "$FIXTURE_ROOT/valid.vmdk" ]
+    hdiutil create -ov -size 512k -type UDIF -fs UDF "$FIXTURE_ROOT/empty.dmg"
+    VBoxManage convertfromraw "$FIXTURE_ROOT/empty.dmg" "$FIXTURE_ROOT/valid.vmdk" --format vmdk
+    [ -f "$FIXTURE_ROOT/valid.vmdk" ]
 }
 
 @test "running with '-h'" {
