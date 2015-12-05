@@ -3,11 +3,10 @@
 fixtures() {
   FIXTURE_ROOT="/tmp/vmdk2dmg-tests"
   RELATIVE_FIXTURE_ROOT="$(bats_trim_filename "$FIXTURE_ROOT")"
-  WORKSPACE=/tmp/vmdk2dmg-tests/workspace
 }
 
 setup() {
-    mkdir "$WORKSPACE"
+    WORKSPACE=$(mktemp -d -t vmdk2dmg.workspace)
 }
 
 teardown() {
