@@ -24,7 +24,7 @@ fixtures
     mkdir "$FIXTURE_ROOT" || true
     rm "$FIXTURE_ROOT/valid.vmdk" || true
 
-    hdiutil create -ov -size 512k -type UDIF -fs UDF "$FIXTURE_ROOT/empty.dmg"
+    hdiutil create -ov -size 1m -type UDIF -fs "HFS+" "$FIXTURE_ROOT/empty.dmg"
     VBoxManage convertfromraw "$FIXTURE_ROOT/empty.dmg" "$FIXTURE_ROOT/valid.vmdk" --format vmdk
     [ -f "$FIXTURE_ROOT/valid.vmdk" ]
 }
