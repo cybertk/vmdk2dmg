@@ -26,3 +26,6 @@ brew cask install paragon-vmdk-mounter
 1. Mount vmdk with `paragon-vmdk-mounter`
 1. Create a dmg from the mounted device with `hdiutl`
 
+## Contributing
+
+See [Contributing Guide](CONTRIBUTING.md)
