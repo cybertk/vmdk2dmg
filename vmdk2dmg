@@ -25,7 +25,7 @@ fi
 if [ "${1%.vmdk}" = "$1" ];
 then
     vmdk_path=$(VBoxManage showvminfo "$1" --machinereadable \
-        | sed  -n 's/"SATA-.*"="\(.*vmdk\)"/\1/p')
+        | sed  -n 's/".*"="\(.*vmdk\)"/\1/p')
 fi
 
 if [ ! -f "$vmdk_path" ];
