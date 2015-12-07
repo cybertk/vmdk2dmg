@@ -18,13 +18,19 @@ dmg_path=${2:-image.dmg}
 
 if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];
 then
-    echo "Usage: vmdk2dmg /path/to/vmdk [/path/to/dmg]"
+    echo "Usage: vmdk2dmg vmname|vmdk_file [/path/to/dmg]"
     exit 0
+fi
+
+if [ "${1%.vmdk}" = "$1" ];
+then
+    vmdk_path=$(VBoxManage showvminfo "$1" --machinereadable \
+        | sed  -n 's/"SATA-.*"="\(.*vmdk\)"/\1/p')
 fi
 
 if [ ! -f "$vmdk_path" ];
 then
-    echo "error: $vmdk_path is invalid"
+    echo "error: $vmdk_path is invalid path"
     exit 1
 fi
 
