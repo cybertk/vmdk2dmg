@@ -9,7 +9,7 @@
 Install from Homebrew
 
 ```bash
-brew install https://raw.githubusercontent.com/cybertk/vmdk2dmg/vmname/vmdk2dmg.rb
+brew install https://raw.githubusercontent.com/cybertk/vmdk2dmg/master/vmdk2dmg.rb
 vmdk2dmg /path/to/vmdk
 ```
 
