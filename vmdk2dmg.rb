@@ -24,8 +24,8 @@ class Vmdk2dmg < Formula
   desc "Convert vmdk to dmg"
   homepage "https://github.com/cybertk/vmdk2dmg"
   url "https://github.com/cybertk/vmdk2dmg.git",
-    :tag => "v0.1.0-beta.1",
-    :revision => "a705e31d2d27ac3e93684ab99c2073fb34e46412"
+    :tag => "v0.1.0",
+    :revision => "326a9d05a7f74e6ab447f5344e7e4ba5e36c01cb"
 
   head "https://github.com/cybertk/vmdk2dmg.git"
 
