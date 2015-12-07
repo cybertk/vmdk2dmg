@@ -35,3 +35,7 @@ brew cask install virtualbox
 ## Contributing
 
 Any contribution is more than welcome! See [Contributing Guide](CONTRIBUTING.md)
+
+## License
+
+**vmdk2dmg** is released under MIT License
