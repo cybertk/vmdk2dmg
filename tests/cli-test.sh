@@ -3,6 +3,8 @@
 fixtures() {
     FIXTURE_ROOT="/tmp/vmdk2dmg-tests"
     PATH="$BATS_TEST_DIRNAME/..:$PATH"
+
+    FIXTURE_VM="vmdk2dmg-fixture-vm"
 }
 
 setup() {
@@ -15,6 +17,9 @@ teardown() {
 
     # Dump output when error. See https://github.com/sstephenson/bats/issues/105
     echo "$output"
+
+    # Test will failed without sleep. Seems that disk is used by another application or already mounted.
+    sleep 1
 }
 
 fixtures
@@ -22,11 +27,17 @@ fixtures
 # Global setup. See https://github.com/sstephenson/bats/issues/108
 @test "ensure fixtures" {
     mkdir "$FIXTURE_ROOT" || true
+    VBoxManage unregistervm "$FIXTURE_VM" --delete || true
     rm "$FIXTURE_ROOT/valid.vmdk" || true
 
     hdiutil create -ov -size 1m -type UDIF -fs "HFS+" "$FIXTURE_ROOT/empty.dmg"
     VBoxManage convertfromraw "$FIXTURE_ROOT/empty.dmg" "$FIXTURE_ROOT/valid.vmdk" --format vmdk
     [ -f "$FIXTURE_ROOT/valid.vmdk" ]
+
+    VBoxManage createvm --name "$FIXTURE_VM" --register
+    VBoxManage storagectl "$FIXTURE_VM" --name SATA --add sata
+    VBoxManage storageattach "$FIXTURE_VM" --storagectl SATA --port 0 --type hdd \
+        --medium "$FIXTURE_ROOT/valid.vmdk"
 }
 
 @test "running with '-h'" {
@@ -41,7 +52,7 @@ fixtures
     echo "${lines[0]}" | grep "^Usage: vmdk2dmg"
 }
 
-@test "running with valid vmdk and exlicit output path" {
+@test "running with valid vmdk_path and exlicit output path" {
     expected_dmg="$WORKSPACE/expected.dmg"
 
     run vmdk2dmg "$FIXTURE_ROOT/valid.vmdk" "$expected_dmg"
@@ -49,13 +60,27 @@ fixtures
     [ -f "$expected_dmg" ]
 }
 
-@test "running with valid vmdk and without output path" {
-    # Test will failed without sleep. Seems that disk is used by another application or already mounted.
-    sleep 1
+@test "running with valid vmdk_path and without output path" {
 
     expected_dmg="$PWD/image.dmg"
 
     run vmdk2dmg "$FIXTURE_ROOT/valid.vmdk"
+    [ $status -eq 0 ]
+    [ -f "$expected_dmg" ]
+}
+
+@test "running with valid vmname and exlicit output path" {
+    expected_dmg="$WORKSPACE/expected.dmg"
+
+    run vmdk2dmg "$FIXTURE_ROOT/valid.vmdk" "$expected_dmg"
+    [ $status -eq 0 ]
+    [ -f "$expected_dmg" ]
+}
+
+@test "running with valid vmname and without output path" {
+    expected_dmg="$PWD/image.dmg"
+
+    run vmdk2dmg "$FIXTURE_VM"
     [ $status -eq 0 ]
     [ -f "$expected_dmg" ]
 }
