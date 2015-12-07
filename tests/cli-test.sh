@@ -7,6 +7,10 @@ fixtures() {
     FIXTURE_VM="vmdk2dmg-fixture-vm"
 }
 
+fixture_vm_state() {
+    VBoxManage showvminfo "$FIXTURE_VM" --machinereadable | sed  -n 's/VMState="\(.*\)"/\1/p'
+}
+
 setup() {
     WORKSPACE=$(mktemp -d -t vmdk2dmg.workspace)
 }
@@ -27,6 +31,7 @@ fixtures
 # Global setup. See https://github.com/sstephenson/bats/issues/108
 @test "ensure fixtures" {
     mkdir "$FIXTURE_ROOT" || true
+    VBoxManage controlvm "$FIXTURE_VM" poweroff || true
     VBoxManage unregistervm "$FIXTURE_VM" --delete || true
     rm "$FIXTURE_ROOT/valid.vmdk" || true
 
@@ -75,6 +80,7 @@ fixtures
     run vmdk2dmg "$FIXTURE_ROOT/valid.vmdk" "$expected_dmg"
     [ $status -eq 0 ]
     [ -f "$expected_dmg" ]
+    [ $(fixture_vm_state) = "poweroff" ]
 }
 
 @test "running with valid vmname and without output path" {
@@ -83,4 +89,15 @@ fixtures
     run vmdk2dmg "$FIXTURE_VM"
     [ $status -eq 0 ]
     [ -f "$expected_dmg" ]
+    [ $(fixture_vm_state) = "poweroff" ]
+}
+
+@test "running against a running vm" {
+    expected_dmg="$PWD/image.dmg"
+
+    VBoxManage startvm "$FIXTURE_VM" --type headless
+    run vmdk2dmg "$FIXTURE_VM"
+    [ $status -eq 0 ]
+    [ -f "$expected_dmg" ]
+    [ $(fixture_vm_state) = "saved" ]
 }
