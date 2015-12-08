@@ -32,6 +32,7 @@ if [ "${1%.vmdk}" = "$1" ];
 then
     vm_name="$1"
 
+    echo "debug: vm_state $(vm_state $vm_name)"
     if [ "$(vm_state "$vm_name")" = "running" ];
     then
         echo "==> Suspending $vm_name"
