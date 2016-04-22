@@ -7,7 +7,7 @@ set -e
 cleanup ()
 {
     rv=$?
-    [ -n "$device" ] && hdiutil detach "$device"
+    [ -n "$device" ] && hdiutil detach "$device" -force
     exit $rv
 }
 
