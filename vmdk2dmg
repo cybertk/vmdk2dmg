@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Convert vmdk to a deployable dmg
 
@@ -13,6 +13,12 @@ cleanup ()
 
 trap cleanup INT TERM EXIT
 
+vm_state() {
+    declare vm_name="$1"
+
+    VBoxManage showvminfo "$vm_name" --machinereadable | sed  -n 's/VMState="\(.*\)"/\1/p'
+}
+
 vmdk_path=$1
 dmg_path=${2:-image.dmg}
 
@@ -24,7 +30,15 @@ fi
 
 if [ "${1%.vmdk}" = "$1" ];
 then
-    vmdk_path=$(VBoxManage showvminfo "$1" --machinereadable \
+    vm_name="$1"
+
+    echo "debug: vm_state $(vm_state $vm_name)"
+    if [ "$(vm_state "$vm_name")" = "running" ];
+    then
+        echo "==> Suspending $vm_name"
+        VBoxManage controlvm "$vm_name" savestate
+    fi
+    vmdk_path=$(VBoxManage showvminfo "$vm_name" --machinereadable \
         | sed  -n 's/".*"="\(.*vmdk\)"/\1/p')
 fi
 

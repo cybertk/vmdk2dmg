@@ -21,5 +21,5 @@ test-homebrew-formula:
 	brew cask install paragon-vmdk-mounter virtualbox
 
 bootstrap:
-	brew install caskroom/cask/brew-cask bats shellcheck
+	brew reinstall caskroom/cask/brew-cask bats shellcheck
 	brew cask install paragon-vmdk-mounter virtualbox
