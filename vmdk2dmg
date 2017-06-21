@@ -11,31 +11,38 @@ cleanup ()
     exit $rv
 }
 
-trap cleanup INT TERM EXIT
 
-vmdk_path=$1
-dmg_path=${2:-image.dmg}
+main()
+{
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];
+    then
+        echo "Usage: vmdk2dmg vmname|vmdk_file [/path/to/dmg]"
+        exit 0
+    fi
 
-if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];
-then
-    echo "Usage: vmdk2dmg vmname|vmdk_file [/path/to/dmg]"
-    exit 0
-fi
+    declare vmdk_path=$1 dmg_path=${2:-image.dmg}
 
-if [ "${1%.vmdk}" = "$1" ];
-then
-    vmdk_path=$(VBoxManage showvminfo "$1" --machinereadable \
-        | sed  -n 's/".*"="\(.*vmdk\)"/\1/p')
-fi
+    trap cleanup INT TERM EXIT
 
-if [ ! -f "$vmdk_path" ];
-then
-    echo "error: $vmdk_path is invalid path"
-    exit 1
-fi
+    if [ "${1%.vmdk}" = "$1" ];
+    then
+        vmdk_path=$(VBoxManage showvminfo "$1" --machinereadable \
+            | sed  -n 's/".*"="\(.*vmdk\)"/\1/p')
+    fi
 
-device=$(vdmutil attach "$vmdk_path" | head -n 1)
+    if [ ! -f "$vmdk_path" ];
+    then
+        echo "error: $vmdk_path is invalid path"
+        exit 1
+    fi
 
-echo "==> Mount as $device"
-echo "==> Converting to $dmg_path"
-hdiutil create -srcdevice "$device" -format UDZO "$dmg_path"
+    device=$(vdmutil attach "$vmdk_path" | head -n 1)
+
+    echo "==> Mount as $device"
+    echo "==> Converting to $dmg_path"
+    hdiutil create -srcdevice "$device" -format UDZO "$dmg_path"
+}
+
+main "$@"
+
+
